@@ -1,0 +1,17 @@
+
+spring:
+  datasource:
+    # Stores the database in ./data/customerdb.mv.db relative to your project root
+    url: jdbc:h2:file:./data/customerdb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      # Creates or updates tables matching your entity definition
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
