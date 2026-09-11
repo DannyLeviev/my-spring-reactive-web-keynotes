@@ -5,6 +5,6 @@ import com.danny.levievs.myspringreactivewebkeynotes.domain.Customer;
 import java.util.List;
 
 
-public record CustomerAndAddress(Customer customer, List<AgreementDto> agreement) {
+public record CustomerAndAddressDto(Customer customer, List<AgreementDto> agreement) {
 
 }

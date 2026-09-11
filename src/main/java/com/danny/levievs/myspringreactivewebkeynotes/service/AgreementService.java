@@ -17,21 +17,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AgreementService {
 
-    private final WebClient agreeWebClient;
+    private final WebClient agreementsWebClient;
 
     public Mono<List<AgreementDto>> getCustomerAgreements(Long customerId){
 
-        log.debug("Begin calling Agreements MS, agreements/owner/{} API.", customerId);
+        log.debug("Calling Agreements MS, agreements/owner/{} API.", customerId);
         long startTime = System.currentTimeMillis();
 
-        return agreeWebClient
+        return agreementsWebClient
                 .get()
                 .uri("owner/" + customerId)
                 .retrieve()
                 .bodyToFlux(AgreementDto.class)
                 .collectList()
                 .timeout(Duration.ofSeconds(40))  // not blocking, just safely wait till timeout
-                .doFinally(responseObj -> log.debug("Elapsed Time: {}", (System.currentTimeMillis() - startTime)/100 + "sec."));
+                .doFinally(responseObj -> log.info("Elapsed Time: {}", (System.currentTimeMillis() - startTime)/100 + "sec."));
     }
 
 }

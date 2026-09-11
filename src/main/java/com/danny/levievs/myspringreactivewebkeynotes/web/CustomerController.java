@@ -1,7 +1,7 @@
 package com.danny.levievs.myspringreactivewebkeynotes.web;
 
 
-import com.danny.levievs.myspringreactivewebkeynotes.model.CustomerAndAddress;
+import com.danny.levievs.myspringreactivewebkeynotes.model.CustomerAndAddressDto;
 import com.danny.levievs.myspringreactivewebkeynotes.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<CustomerAndAddress>> getCustomerById(@PathVariable Long id) {
+    public Mono<ResponseEntity<CustomerAndAddressDto>> getCustomerById(@PathVariable Long id) {
         return customerService.getCustomerById(id)
                 .map(ResponseEntity::ok)
                 .onErrorResume( ex -> {

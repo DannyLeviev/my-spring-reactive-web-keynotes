@@ -3,7 +3,7 @@ package com.danny.levievs.myspringreactivewebkeynotes.service;
 
 import com.danny.levievs.myspringreactivewebkeynotes.domain.Customer;
 import com.danny.levievs.myspringreactivewebkeynotes.model.AgreementDto;
-import com.danny.levievs.myspringreactivewebkeynotes.model.CustomerAndAddress;
+import com.danny.levievs.myspringreactivewebkeynotes.model.CustomerAndAddressDto;
 import com.danny.levievs.myspringreactivewebkeynotes.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,13 +20,13 @@ public class CustomerService {
     private final AgreementService agreementService;
 
 
-    public Mono<CustomerAndAddress> getCustomerById(Long id) {
+    public Mono<CustomerAndAddressDto> getCustomerById(Long id) {
 
         Mono<Customer> customerMono = Mono.fromCallable(() -> customerRepository.findById(id).orElseThrow())
                 .subscribeOn(Schedulers.boundedElastic());
 
         Mono<List<AgreementDto>> agreementMono = agreementService.getCustomerAgreements(id);
 
-        return Mono.zip(customerMono, agreementMono, CustomerAndAddress::new);
+        return Mono.zip(customerMono, agreementMono, CustomerAndAddressDto::new);
     }
 }
