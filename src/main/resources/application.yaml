@@ -4,3 +4,8 @@ server:
 spring:
   application:
     name: my-spring-reactive-web-keynotes
+
+
+application:
+    agreement:
+      base_url: "http://localhost:8084/agreements/"

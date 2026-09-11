@@ -1,3 +1,12 @@
 spring:
   jpa:
     defer-datasource-initialization: true
+
+
+
+logging:
+  level:
+    root: INFO                             # Keep general Spring/Tomcat logs sane
+    org.springframework.web: DEBUG         # Debug Spring Web MVC / WebFlux dispatching
+    org.springframework.security: DEBUG    # (Optional) Debug security filters
+    com.danny.levievs.myspringreactivewebkeynotes: DEBUG
