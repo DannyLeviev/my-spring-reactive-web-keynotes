@@ -2,6 +2,7 @@ package com.danny.levievs.myspringreactivewebkeynotes.service;
 
 
 import com.danny.levievs.myspringreactivewebkeynotes.domain.Customer;
+import com.danny.levievs.myspringreactivewebkeynotes.exceptions.ResourceNotFoundException;
 import com.danny.levievs.myspringreactivewebkeynotes.model.AgreementDto;
 import com.danny.levievs.myspringreactivewebkeynotes.model.CustomerAndAddressDto;
 import com.danny.levievs.myspringreactivewebkeynotes.repository.CustomerRepository;
@@ -22,7 +23,8 @@ public class CustomerService {
 
     public Mono<CustomerAndAddressDto> getCustomerById(Long id) {
 
-        Mono<Customer> customerMono = Mono.fromCallable(() -> customerRepository.findById(id).orElseThrow())
+        Mono<Customer> customerMono = Mono.fromCallable(() -> customerRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + id)))
                 .subscribeOn(Schedulers.boundedElastic());
 
         Mono<List<AgreementDto>> agreementMono = agreementService.getCustomerAgreements(id);

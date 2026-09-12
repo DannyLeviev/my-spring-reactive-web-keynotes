@@ -21,15 +21,7 @@ public class CustomerController {
     @GetMapping("/{id}")
     public Mono<ResponseEntity<CustomerAndAddressDto>> getCustomerById(@PathVariable Long id) {
         return customerService.getCustomerById(id)
-                .map(ResponseEntity::ok)
-                .onErrorResume( ex -> {
-                    if(ex instanceof IllegalArgumentException){
-                        log.error("IllegalArgumentException occurred: {}", ex.getMessage());
-                        return Mono.just(ResponseEntity.notFound().build());
-                    }
-                    log.error("Some general error occurred: {}", ex.getMessage());
-                    return Mono.just(ResponseEntity.internalServerError().build());
-                });
+                .map(ResponseEntity::ok);
     }
 
 }
