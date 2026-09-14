@@ -32,4 +32,45 @@ public class CustomerService {
 
         return Mono.zip(customerMono, agreementMono, CustomerDto::new);
     }
+
+    public Mono<CustomerDto> createCustomer(CustomerDto request) {
+        return Mono.fromCallable(() -> {
+                    Customer customer = Customer.builder()
+                            .firstName(request.customer().getFirstName())
+                            .lastName(request.customer().getLastName())
+                            .email(request.customer().getEmail())
+                            .phoneNumber(request.customer().getPhoneNumber())
+                            .dateOfBirth(request.customer().getDateOfBirth())
+                            .active(true)
+                            .build();
+                    return customerRepository.save(customer);
+                })
+                .subscribeOn(Schedulers.boundedElastic())
+                .map(customer -> new CustomerDto(customer, List.of()));
+    }
+
+    public Mono<CustomerDto> updateCustomer(Long id, CustomerDto request) {
+        return Mono.fromCallable(() -> {
+                    Customer customer = customerRepository.findById(id)
+                            .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + id));
+                    customer.setFirstName(request.customer().getFirstName());
+                    customer.setLastName(request.customer().getLastName());
+                    customer.setEmail(request.customer().getEmail());
+                    customer.setPhoneNumber(request.customer().getPhoneNumber());
+                    customer.setDateOfBirth(request.customer().getDateOfBirth());
+                    return customerRepository.save(customer);
+                })
+                .subscribeOn(Schedulers.boundedElastic())
+                .map(customer -> new CustomerDto(customer, List.of()));
+    }
+
+    public Mono<Void> deleteCustomer(Long id) {
+        return Mono.<Void>fromRunnable(() -> {
+                    if (!customerRepository.existsById(id)) {
+                        throw new ResourceNotFoundException("Customer not found with id " + id);
+                    }
+                    customerRepository.deleteById(id);
+                })
+                .subscribeOn(Schedulers.boundedElastic());
+    }
 }
