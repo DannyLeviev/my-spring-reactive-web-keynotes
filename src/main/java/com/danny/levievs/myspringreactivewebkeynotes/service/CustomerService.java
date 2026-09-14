@@ -4,7 +4,7 @@ package com.danny.levievs.myspringreactivewebkeynotes.service;
 import com.danny.levievs.myspringreactivewebkeynotes.domain.Customer;
 import com.danny.levievs.myspringreactivewebkeynotes.exceptions.ResourceNotFoundException;
 import com.danny.levievs.myspringreactivewebkeynotes.model.AgreementDto;
-import com.danny.levievs.myspringreactivewebkeynotes.model.CustomerAndAddressDto;
+import com.danny.levievs.myspringreactivewebkeynotes.model.CustomerDto;
 import com.danny.levievs.myspringreactivewebkeynotes.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,14 +21,15 @@ public class CustomerService {
     private final AgreementService agreementService;
 
 
-    public Mono<CustomerAndAddressDto> getCustomerById(Long id) {
+    public Mono<CustomerDto> getCustomerById(Long id, boolean agreementsIncluded) {
 
         Mono<Customer> customerMono = Mono.fromCallable(() -> customerRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + id)))
                 .subscribeOn(Schedulers.boundedElastic());
 
-        Mono<List<AgreementDto>> agreementMono = agreementService.getCustomerAgreements(id);
+            Mono<List<AgreementDto>> agreementMono =
+                    agreementsIncluded ? agreementService.getCustomerAgreements(id) : Mono.just(List.of());
 
-        return Mono.zip(customerMono, agreementMono, CustomerAndAddressDto::new);
+        return Mono.zip(customerMono, agreementMono, CustomerDto::new);
     }
 }
